@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница входа</title>
+    <style>
+        /* Пример стилей для кнопок */
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Добро пожаловать!</h1>
+    <button class="button" onclick="redirectToRegister()">Регистрация</button>
+    <button class="button" onclick="openLogin()">Вход</button>
+    <button class="button" onclick="openAdminLogin()">Вход для администратора</button>
+
+    <script>
+        // JavaScript функции для кнопок
+        function redirectToRegister() {
+            // Перенаправление на страницу регистрации
+            window.location.href = "/register";
+        }
+
+        function openAdminLogin() {
+            // Здесь можно добавить код для перехода на страницу входа для администратора
+            alert('Вы будете перенаправлены на страницу входа для администратора.');
+        }
+
+        function openLogin() {
+            // Перенаправление на страницу входа
+            window.location.href = "/login";
+        }
+    </script>
+</body>
+
+</html>
