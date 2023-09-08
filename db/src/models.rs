@@ -1,7 +1,7 @@
 use super::schema::users;
 
 use diesel::prelude::*;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Queryable, Selectable)]
 #[diesel(table_name = users)]
@@ -19,7 +19,7 @@ pub struct NewUser<'a> {
     pub password: &'a str,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct JsonUser {
     pub username: String,
     pub password: String,

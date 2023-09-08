@@ -24,7 +24,7 @@ pub async fn create_app() -> Result<Router> {
             get(|| tools::get_html_page(FrontendPages::REGISTER)),
         )
         .route("/login", get(|| tools::get_html_page(FrontendPages::LOGIN)))
-        .route("/user", get(start_page))
+        .route("/user", get(|| tools::get_html_page(FrontendPages::USER)))
         .route("/unlogin", get(start_page))
         .route("/*path", get(|| async { "Not Found" }))
         // post

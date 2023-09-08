@@ -1,0 +1,2 @@
+#TODO Error handling with axum
+#TODO передавать данные в /user зашифрованно хуй знает

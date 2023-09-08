@@ -43,19 +43,15 @@
                 },
                 body: JSON.stringify(data)
             })
-                .then(response => response.json()) // Преобразуем ответ в JSON
-                .then(responseData => {
-                    if (responseData.message === "OK") {
-                        // Вход выполнен успешно, переадресация на /user с данными
-                        window.location.href = `/user?username=${responseData.username}`;
-                    } else if (responseData.error === "Not Found") {
-                        // Пользователь не найден
+                .then(response => {
+                    if (response.status === 200) {
+                        alert("Вход выполнен успешно.");
+                        window.location.href = "/user";
+                    } else if (response.status === 404) {
                         alert("Пользователь не найден.");
-                    } else if (responseData.error === "Unauthorized") {
-                        // Неверный пароль пользователя
+                    } else if (response.status === 401) {
                         alert("Пароль пользователя неверен.");
                     } else {
-                        // Обработка других ошибок
                         alert("Произошла ошибка при входе.");
                     }
                 })

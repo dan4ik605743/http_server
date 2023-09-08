@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Page</title>
+</head>
+
+<body>
+    <h1>User Page</h1>
+    <div id="user-info">
+        <p id="username"></p>
+    </div>
+
+    <script>
+        // Получение данных пользователя из URL-адреса
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get("username");
+
+        // Отображение имени пользователя
+        document.getElementById("username").textContent = `Username: ${username}`;
+    </script>
+</body>
+
+</html>
