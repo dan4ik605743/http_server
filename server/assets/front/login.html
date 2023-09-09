@@ -3,28 +3,79 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style/login-style.css">
-    <title>Login</title>
+    <title>Login Page</title>
+    <link rel="stylesheet" href="style/login-style.css"
 </head>
 
 <body>
+    <div class="ramka-5"><h2>Login</h2></div>
+    <form id="login-form">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        <button type="submit">Login</button>
+    </form>
 
-    <script src="login.js"></script>
-    <div class="login-card">
-        <h2>Login</h2>
-        <h3></h3>
+    
 
-        <form class="login-form">
-            <input type="text" placeholder="Username">
-            <input type="password" placeholder="Password">
+    <!-- Кнопка "Вернуться назад" -->
+    <button onclick="goBack()">Вернуться назад</button>
 
-            <button type="submit">LOGIN</button>
+    <script>
+        // Обработчик события отправки формы
+        document.getElementById("login-form").addEventListener("submit", function (event) {
+            event.preventDefault(); // Предотвращаем отправку формы по умолчанию
 
-        </form>
-        <form action="/index.html"><button class="button" onclick="Back()">Вернуться назад</button></form>
-    </div>
+            // Получение данных из формы
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Создание объекта с данными для отправки на сервер
+            const data = {
+                username: username,
+                password: password
+            };
+
+            // Отправка данных на сервер с использованием Fetch API
+            fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json()) // Преобразуем ответ в JSON
+                .then(responseData => {
+                    if (responseData.message === "OK") {
+                        // Вход выполнен успешно, переадресация на /user с данными
+                        window.location.href = `/user?username=${responseData.username}`;
+                    } else if (responseData.error === "Not Found") {
+                        // Пользователь не найден
+                        alert("Пользователь не найден.");
+                    } else if (responseData.error === "Unauthorized") {
+                        // Неверный пароль пользователя
+                        alert("Пароль пользователя неверен.");
+                    } else {
+                      // Обработка других ошибок
+                        alert("Произошла ошибка при входе.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Произошла ошибка при выполнении запроса:", error);
+                    alert("Произошла ошибка при входе.");
+                });
+
+            // Очистка формы после отправки данных
+            document.getElementById("login-form").reset();
+        });
+
+        // Функция для перехода на страницу "/"
+        function goBack() {
+            window.location.href = "/";
+        }
+    </script>
 </body>
 
 </html>
