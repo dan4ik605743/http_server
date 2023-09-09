@@ -1,26 +1,7 @@
 use axum::{http::Response, Json};
 use serde_json::{json, Value};
 
-use axum::http::StatusCode;
-
 use db::{JsonUser, Pool, UserError};
-
-#[non_exhaustive]
-pub struct FrontendPages;
-
-impl FrontendPages {
-    pub const INDEX: &str = include_str!("../../assets/front/index.html");
-    pub const REGISTER: &str = include_str!("../../assets/front/register.html");
-    pub const LOGIN: &str = include_str!("../../assets/front/login.html");
-    pub const USER: &str = include_str!("../../assets/front/user.html");
-}
-
-pub async fn get_html_page(html_content: &str) -> Response<String> {
-    Response::builder()
-        .header("Content-Type", "text/html")
-        .body(html_content.to_string())
-        .unwrap()
-}
 
 pub async fn register(Json(data): Json<JsonUser>, conn: Pool) -> Response<String> {
     let conn = &mut conn.get().unwrap();
