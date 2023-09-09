@@ -2,16 +2,15 @@ use anyhow::Result;
 use clap::Parser;
 
 use axum::{
-    handler::HandlerWithoutStateExt,
     routing::{get, post},
     Router,
 };
-use hyper::StatusCode;
-use tower_http::services::ServeDir;
+use tower_http::services::{ServeDir, ServeFile};
 
-mod tools;
+mod get;
+mod post;
 
-const STATIC_SOURCE: &str = "./server/assets/front";
+use get::StaticSource;
 
 pub async fn create_app() -> Result<Router> {
     let conn = db::get_connection_pool(&super::Args::parse().db)
@@ -19,38 +18,30 @@ pub async fn create_app() -> Result<Router> {
         .take()
         .unwrap();
 
+    let serve_dir = ServeDir::new(StaticSource::SOURCE_DIR)
+        .not_found_service(ServeFile::new(StaticSource::ERROR_PAGE));
+
     Ok(Router::new()
         // get
-        // .route("/", get(|| tools::get_html_page(FrontendPages::INDEX)))
-        // .route("/admin", get(start_page))
-        // .route(
-        //     "/register",
-        //     get(|| tools::get_html_page(FrontendPages::REGISTER)),
-        // )
-        // .route("/login", get(|| tools::get_html_page(FrontendPages::LOGIN)))
-        // .route("/user", get(|| tools::get_html_page(FrontendPages::USER)))
-        // .route("/*path", get(|| async { "Not Found" }))
+        .route("/register", get(get::register))
+        .route("/login", get(get::login))
+        .route("/error", get(get::error))
         // post
         .route(
             "/register",
             post({
                 let conn = conn.clone();
-                move |body| tools::register(body, conn)
+                move |body| post::register(body, conn)
             }),
         )
         .route(
             "/login",
             post({
                 let conn = conn.clone();
-                move |body| tools::login(body, conn)
+                move |body| post::login(body, conn)
             }),
         )
-        .nest_service("/", ServeDir::new(STATIC_SOURCE)))
-    // .fallback_service(
-    //     ServeDir::new(STATIC_SOURCE).not_found_service(handle_404.into_service()),
-    // ))
+        // StaticResource and fallback other paths
+        .nest_service("/", serve_dir.clone())
+        .fallback_service(serve_dir.clone()))
 }
-
-// async fn handle_404() -> (StatusCode, &'static str) {
-//     (StatusCode::NOT_FOUND, "Not found")
-// }
