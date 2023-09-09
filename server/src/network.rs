@@ -25,7 +25,6 @@ pub async fn create_app() -> Result<Router> {
         // get
         .route("/register", get(get::register))
         .route("/login", get(get::login))
-        .route("/error", get(get::error))
         // post
         .route(
             "/register",

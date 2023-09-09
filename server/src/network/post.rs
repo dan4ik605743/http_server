@@ -51,7 +51,6 @@ pub async fn login(Json(data): Json<JsonUser>, conn: Pool) -> Result<Json<Value>
 }
 
 // JsonErrorHandling
-
 #[non_exhaustive]
 struct PostJsonError;
 

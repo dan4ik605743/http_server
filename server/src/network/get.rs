@@ -29,9 +29,3 @@ pub async fn register(request: Request<Body>) -> GetResult {
         .oneshot(request)
         .await
 }
-
-pub async fn error(request: Request<Body>) -> GetResult {
-    ServeFile::new(StaticSource::ERROR_PAGE)
-        .oneshot(request)
-        .await
-}
