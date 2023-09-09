@@ -45,12 +45,12 @@ pub async fn create_app() -> Result<Router> {
                 move |body| tools::login(body, conn)
             }),
         )
-        .nest_service("/", ServeDir::new(STATIC_SOURCE))
-        .fallback_service(
-            ServeDir::new(STATIC_SOURCE).not_found_service(handle_404.into_service()),
-        ))
+        .nest_service("/", ServeDir::new(STATIC_SOURCE)))
+    // .fallback_service(
+    //     ServeDir::new(STATIC_SOURCE).not_found_service(handle_404.into_service()),
+    // ))
 }
 
-async fn handle_404() -> (StatusCode, &'static str) {
-    (StatusCode::NOT_FOUND, "Not found")
-}
+// async fn handle_404() -> (StatusCode, &'static str) {
+//     (StatusCode::NOT_FOUND, "Not found")
+// }

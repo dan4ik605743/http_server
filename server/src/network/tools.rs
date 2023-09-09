@@ -25,21 +25,21 @@ pub async fn register(Json(data): Json<JsonUser>, conn: Pool) -> Response<String
     }
 }
 
-// pub async fn login(Json(data): Json<JsonUser>, conn: Pool) -> Json<Value> {
-//     let conn = &mut conn.get().unwrap();
+pub async fn login(Json(data): Json<JsonUser>, conn: Pool) -> Json<Value> {
+    let conn = &mut conn.get().unwrap();
 
-//     match db::verification_user(conn, &data.username, &data.password) {
-//         Ok(_) => Json(json!({ "message": "OK", "username": data.username })),
-//         Err(e) if e.downcast_ref() == Some(&UserError::NotFoundUser) => {
-//             tracing::warn!("'{}': {e}", data.username);
-//             Json(json!({ "error": "Not Found" }))
-//         }
-//         Err(e) => {
-//             tracing::warn!("'{}': {e}", data.username);
-//             Json(json!({ "error": "Unauthorized" }))
-//         }
-//     }
-// }
+    match db::verification_user(conn, &data.username, &data.password) {
+        Ok(_) => Json(json!({ "message": "OK", "username": data.username })),
+        Err(e) if e.downcast_ref() == Some(&UserError::NotFoundUser) => {
+            tracing::warn!("'{}': {e}", data.username);
+            Json(json!({ "error": "Not Found" }))
+        }
+        Err(e) => {
+            tracing::warn!("'{}': {e}", data.username);
+            Json(json!({ "error": "Unauthorized" }))
+        }
+    }
+}
 
 // pub async fn login(Json(data): Json<JsonUser>, conn: Pool) -> Response<String> {
 //     let conn = &mut conn.get().unwrap();
@@ -56,7 +56,3 @@ pub async fn register(Json(data): Json<JsonUser>, conn: Pool) -> Response<String
 //         }
 //     }
 // }
-
-pub async fn login(Json(data): Json<JsonUser>, conn: Pool) -> Json<Value> {
-    Json(json!({ "message": "OK", "username": data.username }))
-}
