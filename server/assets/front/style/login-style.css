@@ -1,60 +1,178 @@
-@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap");
-.ramka-5 {
-  position: relative;
-  z-index: 0;
-  width: 150px;
-  height: 150px;
-  border-radius: 10px;
-  overflow: hidden;
-  margin: 30px auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  font-family: "Ubuntu", sans-serif;
-}
-.ramka-5::before {
-  content: "";
-  position: absolute;
-  z-index: -2;
-  left: -50%;
-  top: -50%;
-  width: 200%;
-  height: 200%;
-  background-color: #bfe2ff;
-  background-repeat: no-repeat;
-  background-size: 50% 50%, 50% 50%;
-  background-position: 0 0, 100% 0, 100% 100%, 0 100%;
-  background-image: linear-gradient(#bfe2ff, #bfe2ff),
-    linear-gradient(#337ab7, #337ab7), linear-gradient(#bfe2ff, #bfe2ff),
-    linear-gradient(#337ab7, #337ab7);
-  animation: anim-ramka-5 4s linear infinite;
-}
-.ramka-5::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  left: 6px;
-  top: 6px;
-  width: calc(100% - 12px);
-  height: calc(100% - 12px);
-  background: white;
-  border-radius: 5px;
-}
-@keyframes anim-ramka-5 {
-  100% {
-    transform: rotate(1turn);
-  }
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+
+*{
+    box-sizing: border-box;
 }
 
-input {
-  padding: 3px;
-  box-shadow: 3px 3px 5px grey;
-  font-size: 14px;
+html, body, .wrapper{
+    height: 100%;
+}
+
+body{
+    display: grid;
+    place-items: center;
+    margin: 0;
+    padding: 0 24px;
+    background-image: url("background.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: "Ubuntu";
+    color: #000;
+    animation: rotate 6s infinite alternate linear;
+}
+
+.login-card{
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    margin: 0 20px;
+    padding: 70px 30px 44px;
+    border-radius: 1.25rem;
+    background: #fff;
+    text-align: center;
+}
+
+.login-card > h2{
+    font-size: 36px;
+    font-weight: 600;
+    margin: 0 0 12px;
+}
+
+.login-card > h3{
+    color: rgba(0, 0, 0, 0.38);
+    margin: 0 0 30px;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.login-form{
+    width: 100%;
+    margin: 0;
+    display: grid;
+    gap: 16px;
+}
+
+.login-form > input, .login-form > button{
+    width: 100%;
+    height: 50px;
+}
+
+.login-form > input {
+    border: 2px solid #ebebeb;
+    font-family: inherit;
+    font-size: 15px;
+    padding: 0 16px;
+    border-radius: 1.25rem;
+    transition: all 0.375s;
+}
+
+.login-form > input:hover{
+    border: 2px solid #10449A;
+}
+
+.login-form > button{
+    cursor: pointer;
+    width: 100%;
+    padding: 0 16px;
+    border-radius: 1.25rem;
+    background: #216ce7;
+    color: #f9f9f9;
+    border: 0;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 2px;
+    transition: all 0.375s;
+}
+
+.login-form > button:hover{
+    background: #10449A;
+}
+
+.login-form > a{
+    color: #216ce7;
+    font-size: 0.9rem;
+    text-align: left;
+    text-decoration: none;
+    margin-bottom: 6px;
+    transition: all 0.375s;
+}
+
+.login-form > a:hover{
+    color: #10449A;
+}
+
+@keyframes rotate{
+    100%{
+        background-position: 15% 50%;
+    }
+}
+
+@media (width >= 500px){
+    body{
+        padding: 0;
+    }
+    .login-card{
+        margin: 0;
+        width: 400px;
+    }
+}
+
+.BackHome{
+  width: 100%;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.BackHome > input, .BackHome > button{
+  width: 100%;
+  height: 50px;
+}
+
+.BackHome > input {
+  border: 2px solid #ebebeb;
+  font-family: inherit;
+  font-size: 15px;
+  padding: 0 16px;
+  border-radius: 1.25rem;
+  transition: all 0.375s;
+}
+
+.BackHome > input:hover{
+  border: 2px solid #10449A;
+}
+
+.BackHome > button{
+  cursor: pointer;
+  width: 100%;
+  padding: 0 16px;
+  border-radius: 1.25rem;
+  background: #216ce7;
+  color: #f9f9f9;
+  border: 0;
+  font-family: inherit;
+  font-size: 1rem;
   font-weight: 600;
-  width: 300px;
+  text-align: center;
+  letter-spacing: 2px;
+  transition: all 0.375s;
 }
 
-body {
-  background: url("background1.svg");
+.BackHome > button:hover{
+  background: #10449A;
+}
+
+.BackHome > a{
+  color: #216ce7;
+  font-size: 0.9rem;
+  text-align: left;
+  text-decoration: none;
+  margin-bottom: 6px;
+  transition: all 0.375s;
+}
+
+.BackHome > a:hover{
+  color: #10449A;
 }

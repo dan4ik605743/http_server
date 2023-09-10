@@ -5,23 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <link rel="stylesheet" href="style/login-style.css"
-</head>
+    <link rel="stylesheet" href="style/login-style.css" </head>
 
 <body>
-    <div class="ramka-5"><h2>Login</h2></div>
-    <form id="login-form">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        <button type="submit">Login</button>
-    </form>
+    <div class="login-card">
+        <h2>Login</h2>
+        <h3>Введите данные</h3>
 
-    
+        <form class="login-form" id="login-form">
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <a href="#">Forget your password?</a>
+            <button type="submit">LOGIN</button>
+        </form>
+        <br>
+        <div class="BackHome"><button onclick="goBack()">Вернуться назад</button></div>
+    </div>
 
     <!-- Кнопка "Вернуться назад" -->
-    <button onclick="goBack()">Вернуться назад</button>
+
 
     <script>
         // Обработчик события отправки формы
@@ -58,7 +60,7 @@
                         // Неверный пароль пользователя
                         alert("Пароль пользователя неверен.");
                     } else {
-                      // Обработка других ошибок
+                        // Обработка других ошибок
                         alert("Произошла ошибка при входе.");
                     }
                 })
