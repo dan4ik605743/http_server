@@ -1,0 +1,35 @@
+ /* Пример стилей для кнопок */
+ .button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+}
+body{
+    display: grid;
+    place-items: center;
+    margin: 0;
+    padding: 0 24px;
+    background-image: url("background.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: "Ubuntu";
+    color: #000;
+    animation: rotate 6s infinite alternate linear;
+}
+@keyframes rotate{
+    100%{
+        background-position: 15% 30%;
+    }
+}
+
+@media (width >= 500px){
+    body{
+        padding: 0;
+    }
+}
+

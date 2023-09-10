@@ -5,20 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Форма ввода данных</title>
+    <link rel="stylesheet" href="style/register.css">
 </head>
 
 <body>
-    <h1>Регистрация:</h1>
-    <form id="data-form">
-        <label for="username">Имя пользователя:</label>
-        <input type="text" id="username" name="username" required><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        <button type="submit">Зарегистрироваться</button>
-    </form>
+    <div class="login-card">
+        <h2>Register</h2>
+        <h3>Введите данные</h3>
 
-    <!-- Кнопка "Вернуться назад" -->
-    <button onclick="goBack()">Вернуться назад</button>
+        <form class="login-form" id="data-form">
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <a href="#"></a>
+            <button type="submit">REGISTER</button>
+        </form>
+        <br>
+        <div class="BackHome"><button onclick="goBack()">Вернуться назад</button></div>
+    </div>
 
     <script src="register.js"></script>
 </body>
