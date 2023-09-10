@@ -14,7 +14,7 @@ pub fn init_logger() {
 
     // Init
     tracing_subscriber::registry()
-        .with(fmt::layer().with_timer(timer).with_target(false))
+        .with(fmt::layer().with_timer(timer))
         .with(env_filter)
         .init();
 }

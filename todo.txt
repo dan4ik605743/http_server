@@ -1,2 +1,5 @@
 #TODO Error handling with axum
 #TODO передавать данные в /user зашифрованно хуй знает
+#TODO python test full api
+#TODO modules tests
+#TODO logger.rs там глянуть тд хз))) 

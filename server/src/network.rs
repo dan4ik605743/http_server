@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use clap::Parser;
 
 use axum::{
@@ -13,10 +13,9 @@ mod post;
 use get::StaticSource;
 
 pub async fn create_app() -> Result<Router> {
-    let conn = db::get_connection_pool(&super::Args::parse().db)
-        .unwrap()
+    let conn = db::get_connection_pool(&super::Args::parse().db)?
         .take()
-        .unwrap();
+        .context("Failed get connection pool")?;
 
     let serve_dir = ServeDir::new(StaticSource::SOURCE_DIR)
         .not_found_service(ServeFile::new(StaticSource::ERROR_PAGE));

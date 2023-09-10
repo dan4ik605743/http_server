@@ -1,6 +1,6 @@
 use std::cell::OnceCell;
 
-use anyhow::{bail, Result};
+use anyhow::{anyhow, bail, Result};
 use thiserror::Error;
 
 use diesel::{
@@ -27,7 +27,8 @@ pub fn get_connection_pool(db_path: &str) -> Result<OnceCell<Pool>> {
     let pool = Pool::builder().build(ConnectionManager::new(db_path))?;
     let cell = OnceCell::<Pool>::new();
 
-    cell.set(pool).unwrap();
+    cell.set(pool)
+        .map_err(|_| anyhow!("Failed to set connection pool"))?;
     Ok(cell)
 }
 

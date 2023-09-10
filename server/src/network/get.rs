@@ -12,8 +12,6 @@ impl StaticSource {
     pub const ERROR_PAGE: &str = "./server/assets/front/error.html";
     pub const LOGIN_PAGE: &str = "./server/assets/front/login.html";
     pub const REGISTER_PAGE: &str = "./server/assets/front/register.html";
-
-    // pub const INDEX_PAGE: &str = "./server/assets/front/index.html";
 }
 
 type GetResult = Result<Response<ServeFileSystemResponseBody>, Infallible>;
