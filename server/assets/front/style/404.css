@@ -1,4 +1,5 @@
 body {
   overflow: hidden;
   background: url("404.svg");
+  background-size:100%;
 }

@@ -9,12 +9,20 @@
 </head>
 
 <body>
-    <h1>Добро пожаловать!</h1>
-    <form action="/register"><button class="button" onclick="redirectToRegister()">Регистрация</button></form>
-    <form action="/login"><button class="button" onclick="openLogin()">Вход</button></form>
-    <form action="/admin"><button class="button" onclick="openAdminLogin()">Вход для администратора</button></form>
 
-    <script src="index.js"></script>
+    <div class="login-card">
+        <form class="login-form" id="login-form">
+            <h2>Добро пожаловать!</h2>
+            <form action="/register"><button class="button" onclick="redirectToRegister()">Регистрация</button></form>
+            <form action="/login"><button class="button" onclick="openLogin()">Вход</button></form>
+            <form action="/admin"><button class="button" onclick="openAdminLogin()">Вход для администратора</button>
+            </form>
+
+            <script src="index.js"></script>
+        </form>
+
+
+    </div>
 </body>
 
 </html>
