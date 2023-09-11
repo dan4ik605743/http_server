@@ -1,7 +1,11 @@
 use anyhow::{Context, Result};
+
+use super::Args;
 use clap::Parser;
 
 use axum::{
+    http::uri::Uri,
+    response::Redirect,
     routing::{get, post},
     Router,
 };
@@ -12,8 +16,8 @@ mod post;
 
 use get::StaticSource;
 
-pub async fn create_app() -> Result<Router> {
-    let conn = db::get_connection_pool(&super::Args::parse().db)?
+pub async fn https_app() -> Result<Router> {
+    let conn = db::get_connection_pool(&Args::parse().db)?
         .take()
         .context("Failed get connection pool")?;
 
@@ -42,4 +46,15 @@ pub async fn create_app() -> Result<Router> {
         // StaticResource and fallback other paths
         .nest_service("/", serve_dir.clone())
         .fallback_service(serve_dir.clone()))
+}
+
+pub async fn http_app() -> Result<Router> {
+    Ok(Router::new().route("/", get(http_handler)))
+}
+
+async fn http_handler(uri: Uri) -> Redirect {
+    let args = Args::parse();
+    let uri = format!("https://{}:{}{}", args.ip, args.https_port, uri.path());
+
+    Redirect::temporary(&uri)
 }

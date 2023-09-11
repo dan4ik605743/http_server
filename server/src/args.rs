@@ -7,9 +7,13 @@ pub struct Args {
     #[arg(short, long, default_value_t = String::from("127.0.0.1"))]
     pub ip: String,
 
-    /// PORT
-    #[arg(short, long, default_value_t = 7879)]
-    pub port: u32,
+    /// HTTP PORT
+    #[arg(long, default_value_t = 3000)]
+    pub http_port: u32,
+
+    /// HTTPS PORT
+    #[arg(long, default_value_t = 3443)]
+    pub https_port: u32,
 
     /// DB
     #[arg(short, long)]
