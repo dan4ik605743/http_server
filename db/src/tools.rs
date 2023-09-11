@@ -11,8 +11,6 @@ use diesel::{
 use super::models::{NewUser, User};
 use super::schema::users;
 
-type Users = Vec<User>;
-
 pub type Pool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
 #[derive(Debug, Error, PartialEq)]
@@ -32,8 +30,17 @@ pub fn get_connection_pool(db_path: &str) -> Result<OnceCell<Pool>> {
     Ok(cell)
 }
 
-pub fn create_user(conn: &mut SqliteConnection, username: &str, password: &str) -> Result<()> {
-    let new_user = NewUser { username, password };
+pub fn create_user(
+    conn: &mut SqliteConnection,
+    username: &str,
+    password_hash: &str,
+    password_salt: &str,
+) -> Result<()> {
+    let new_user = NewUser {
+        username,
+        password_hash,
+        password_salt,
+    };
 
     diesel::insert_into(users::table)
         .values(&new_user)
@@ -42,19 +49,42 @@ pub fn create_user(conn: &mut SqliteConnection, username: &str, password: &str) 
     Ok(())
 }
 
-pub fn verification_user(conn: &mut SqliteConnection, username: &str, pasword: &str) -> Result<()> {
+pub fn verification_user(
+    conn: &mut SqliteConnection,
+    username: &str,
+    password_hash: &str,
+) -> Result<()> {
+    if search_user(conn, username)?.password_hash == password_hash {
+        Ok(())
+    } else {
+        bail!(UserError::WrongPassword);
+    }
+}
+
+pub fn get_salt(conn: &mut SqliteConnection, username: &str) -> Result<String> {
+    let found_user = search_user(conn, username)?;
+    Ok(found_user.password_salt)
+}
+
+pub fn search_user(conn: &mut SqliteConnection, username: &str) -> Result<User> {
     let found_user = users::table
         .filter(users::username.eq(username))
         .first::<User>(conn)
         .optional()?;
 
     match found_user {
-        Some(user) if user.password == pasword => Ok(()),
+        Some(user) => Ok(user),
         None => bail!(UserError::NotFoundUser),
-        _ => bail!(UserError::WrongPassword),
     }
 }
 
-pub fn get_users(conn: &mut SqliteConnection) -> Result<Users> {
-    Ok(users::table.load::<User>(conn)?)
-}
+// fn dbg_users(conn: &mut SqliteConnection) -> Result<()> {
+//     let x = users::table.load::<User>(conn)?;
+//     println!("{:#?}", x);
+//     Ok(())
+// }
+
+// type Users = Vec<User>;
+// pub fn get_users(conn: &mut SqliteConnection) -> Result<Users> {
+//     Ok(users::table.load::<User>(conn)?)
+// }

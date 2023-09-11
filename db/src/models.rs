@@ -9,14 +9,18 @@ use serde::{Deserialize, Serialize};
 pub struct User {
     pub id: i32,
     pub username: String,
-    pub password: String,
+
+    pub password_hash: String,
+    pub password_salt: String,
 }
 
 #[derive(Insertable)]
 #[diesel(table_name = users)]
 pub struct NewUser<'a> {
     pub username: &'a str,
-    pub password: &'a str,
+
+    pub password_hash: &'a str,
+    pub password_salt: &'a str,
 }
 
 #[derive(Debug, Deserialize, Serialize)]

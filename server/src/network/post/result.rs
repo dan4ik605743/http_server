@@ -12,6 +12,7 @@ pub struct JsonStatusCode;
 impl JsonStatusCode {
     pub const NOT_FOUND: &str = r#"{ "error": "Not Found" }"#;
     pub const UNAUTHORIZED: &str = r#"{ "error": "Unauthorized" }"#;
+    pub const INTERNAL_SERVER_ERROR: &str = r#"{ "error": "Internal Server Error" }"#;
 }
 
 // AppErrorHandling

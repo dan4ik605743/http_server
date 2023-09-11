@@ -17,6 +17,7 @@ pub fn return_json_error(bad_code: &str) -> PostJsonResult {
     Ok(Json(serde_json::from_str(bad_code)?))
 }
 
+// Мейби сделать Option аргументы чтобы можно было возвращать просто { "message": "OK" }
 pub fn return_json_ok<T: std::fmt::Display>(
     field: Vec<&str>,
     field_data: Vec<T>,

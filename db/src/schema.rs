@@ -4,6 +4,7 @@ diesel::table! {
     users (id) {
         id -> Integer,
         username -> Text,
-        password -> Text,
+        password_hash -> Text,
+        password_salt -> Text,
     }
 }
