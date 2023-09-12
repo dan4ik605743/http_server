@@ -5,6 +5,7 @@ use hyper::StatusCode;
 
 mod hash;
 mod result;
+mod session;
 mod tools;
 
 use result::{JsonStatusCode, PostJsonResult, PostResponseResult};

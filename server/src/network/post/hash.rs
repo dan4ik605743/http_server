@@ -7,7 +7,6 @@ use argon2::{
 type PasswordHashAndPasswordSalt = Result<(String, String)>;
 type PasswordHash = Result<String>;
 
-//TODO медленно? хуй знает
 pub fn create_password_hash_and_password_salt(password: &str) -> PasswordHashAndPasswordSalt {
     let password_salt = SaltString::generate(&mut OsRng);
 

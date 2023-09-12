@@ -1,1 +1,3 @@
 target
+server/assets/rest_api_tests/.pytest_cache
+server/assets/rest_api_tests/__pycache__

@@ -3,3 +3,4 @@
 #TODO python test full api
 #TODO modules tests
 #TODO logger.rs там глянуть тд хз))) 
+#TODO логгинг при хешинге пороля?
