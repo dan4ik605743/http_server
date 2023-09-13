@@ -23,7 +23,10 @@ pub struct AppError(pub anyhow::Error);
 impl axum::response::IntoResponse for AppError {
     fn into_response(self) -> Response {
         (
-            StatusCode::INTERNAL_SERVER_ERROR,
+            {
+                tracing::error!("{}", self.0);
+                StatusCode::INTERNAL_SERVER_ERROR
+            },
             format!("Something went wrong: {}", self.0),
         )
             .into_response()
