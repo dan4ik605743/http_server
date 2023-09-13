@@ -11,10 +11,10 @@ use axum::{
 use tower_http::services::{ServeDir, ServeFile};
 
 pub mod static_source;
-pub use self::static_source::StaticSource;
 
 use crate::users;
 use args::Args;
+use static_source::StaticSource;
 
 pub async fn https_router() -> Result<Router> {
     let conn = db::get_connection_pool(&Args::parse().db)?

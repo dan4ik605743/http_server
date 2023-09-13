@@ -17,6 +17,8 @@ pub mod users {
         pub mod get;
         pub mod post;
     }
+
+    mod prelude;
 }
 
 pub mod crypto {

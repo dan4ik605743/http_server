@@ -1,11 +1,4 @@
-use axum::Json;
-
-use db::{JsonUser, Pool, UserError};
-use hyper::StatusCode;
-
-use crate::crypto::passwords;
-use crate::network::responses::post::tools;
-use crate::network::responses::post::{JsonStatusCode, PostJsonResponse, PostResponse};
+use crate::users::prelude::*;
 
 pub async fn register(Json(data): Json<JsonUser>, conn: Pool) -> PostResponse {
     let conn = &mut conn.get()?;
