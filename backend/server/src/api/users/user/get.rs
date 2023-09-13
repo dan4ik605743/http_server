@@ -1,5 +1,5 @@
 use crate::api::users::prelude::*;
 
 pub async fn user(request: Request<Body>) -> GetResponse {
-    get_page(StaticSource::LOGIN_PAGE, request).await
+    get_page(StaticSource::USER_PAGE, request).await
 }

@@ -1,10 +1,12 @@
 use anyhow::Result;
 use clap::Parser;
 
+mod api;
+mod args;
 mod logger;
 mod tools;
 
-use server::args::Args;
+use args::Args;
 
 #[tokio::main]
 async fn main() -> Result<()> {

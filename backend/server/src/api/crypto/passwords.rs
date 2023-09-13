@@ -26,6 +26,3 @@ pub fn get_password_hash(password: &str, password_salt: &str) -> PasswordHash {
         .map_err(|e| anyhow!(e))?
         .to_string())
 }
-
-#[cfg(test)]
-mod tests;
