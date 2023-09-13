@@ -1,4 +1,4 @@
-use crate::users::prelude::*;
+use crate::api::users::prelude::*;
 
 pub async fn user(request: Request<Body>) -> GetResponse {
     get_page(StaticSource::LOGIN_PAGE, request).await

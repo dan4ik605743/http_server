@@ -1,4 +1,4 @@
-use crate::users::prelude::*;
+use crate::api::users::prelude::*;
 
 pub async fn register(Json(data): Json<JsonUser>, conn: Pool) -> PostResponse {
     let conn = &mut conn.get()?;

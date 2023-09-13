@@ -4,7 +4,7 @@ use clap::Parser;
 mod logger;
 mod tools;
 
-use args::Args;
+use server::args::Args;
 
 #[tokio::main]
 async fn main() -> Result<()> {

@@ -81,31 +81,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a4668cab20f66d8d020e1fbc0ebe47217433c1b6c8f2040faf858554e394ace6"
 
 [[package]]
-name = "api"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "argon2",
- "args",
- "axum",
- "axum-extra",
- "axum-server",
- "clap",
- "db",
- "hyper",
- "jsonwebtoken",
- "rand_core",
- "serde",
- "serde_json",
- "time",
- "tokio",
- "tower",
- "tower-http",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
 name = "arc-swap"
 version = "1.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -121,13 +96,6 @@ dependencies = [
  "blake2",
  "cpufeatures",
  "password-hash",
-]
-
-[[package]]
-name = "args"
-version = "0.1.0"
-dependencies = [
- "clap",
 ]
 
 [[package]]
@@ -1185,13 +1153,21 @@ name = "server"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "api",
- "args",
+ "argon2",
+ "axum",
+ "axum-extra",
  "axum-server",
  "clap",
  "db",
+ "hyper",
+ "jsonwebtoken",
+ "rand_core",
+ "serde",
+ "serde_json",
  "time",
  "tokio",
+ "tower",
+ "tower-http",
  "tracing",
  "tracing-subscriber",
 ]

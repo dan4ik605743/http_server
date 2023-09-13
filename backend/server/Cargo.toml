@@ -7,9 +7,18 @@ edition = "2021"
 
 # Network
 tokio = { version = "1", features = ["full"] }
+axum = "0.6.20"
 axum-server = { version = "0.5.1", features = ["tls-rustls"] }
+axum-extra = { version = "0.7.7", features = ["cookie"] }
+tower = "0.4.13"
+tower-http = { version = "0.4.0", features = ["fs"] }
+hyper = "0.14.27"
 
-# Loging
+# Parsing
+serde = { version = "1.0.175", features = ["derive"] }
+serde_json = "1.0.103"
+
+# Logging
 tracing-subscriber = { version = "0.3", features = [
     "env-filter",
     "local-time",
@@ -17,11 +26,14 @@ tracing-subscriber = { version = "0.3", features = [
 tracing = "0.1.37"
 time = { version = "0.3.25", features = ["macros"] }
 
+# Cryptography
+argon2 = "0.5.2"
+rand_core = { version = "0.6.4", features = ["getrandom"] }
+jsonwebtoken = "8.3.0"
+
 # Other
 anyhow = "1.0.72"
 clap = { version = "4.3.19", features = ["derive"] }
 
 # Workspace
 db = { path = "../db" }
-args = { path = "../args" }
-api = { path = "../api" }
