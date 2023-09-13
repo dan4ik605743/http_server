@@ -27,17 +27,5 @@ pub fn get_password_hash(password: &str, password_salt: &str) -> PasswordHash {
         .to_string())
 }
 
-//TODO
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn govno() -> Result<()> {
-        let pass = "123";
-        let (password_hash, password_salt) = create_password_hash_and_password_salt(pass)?;
-        let resume_hash_password = get_password_hash(pass, &password_salt)?;
-        assert_eq!(password_hash, resume_hash_password);
-        Ok(())
-    }
-}
+mod tests;

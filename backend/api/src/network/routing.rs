@@ -1,6 +1,5 @@
 use anyhow::{Context, Result};
 
-use super::Args;
 use clap::Parser;
 
 use axum::{
@@ -11,12 +10,13 @@ use axum::{
 };
 use tower_http::services::{ServeDir, ServeFile};
 
-mod get;
-mod post;
+pub mod static_source;
+pub use self::static_source::StaticSource;
 
-use get::StaticSource;
+use crate::users;
+use args::Args;
 
-pub async fn https_app() -> Result<Router> {
+pub async fn https_router() -> Result<Router> {
     let conn = db::get_connection_pool(&Args::parse().db)?
         .take()
         .context("Failed get connection pool")?;
@@ -26,21 +26,21 @@ pub async fn https_app() -> Result<Router> {
 
     Ok(Router::new()
         // get
-        .route("/register", get(get::register))
-        .route("/login", get(get::login))
+        .route("/user/auth/register", get(users::auth::get::register))
+        .route("/user/auth/login", get(users::auth::get::login))
         // post
         .route(
-            "/register",
+            "/user/auth/register",
             post({
                 let conn = conn.clone();
-                move |body| post::register(body, conn)
+                move |body| users::auth::post::register(body, conn)
             }),
         )
         .route(
-            "/login",
+            "/user/auth/login",
             post({
                 let conn = conn.clone();
-                move |body| post::login(body, conn)
+                move |body| users::auth::post::login(body, conn)
             }),
         )
         // StaticResource and fallback other paths
@@ -48,7 +48,7 @@ pub async fn https_app() -> Result<Router> {
         .fallback_service(serve_dir.clone()))
 }
 
-pub async fn http_app() -> Result<Router> {
+pub async fn http_router() -> Result<Router> {
     Ok(Router::new().route("/", get(http_handler)))
 }
 

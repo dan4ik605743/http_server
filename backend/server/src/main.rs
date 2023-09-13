@@ -1,9 +1,7 @@
 use anyhow::Result;
 use clap::Parser;
 
-mod args;
 mod logger;
-mod network;
 mod tools;
 
 use args::Args;

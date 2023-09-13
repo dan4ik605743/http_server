@@ -1,0 +1,27 @@
+[package]
+name = "server"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+# Network
+tokio = { version = "1", features = ["full"] }
+axum-server = { version = "0.5.1", features = ["tls-rustls"] }
+
+# Loging
+tracing-subscriber = { version = "0.3", features = [
+    "env-filter",
+    "local-time",
+] }
+tracing = "0.1.37"
+time = { version = "0.3.25", features = ["macros"] }
+
+# Other
+anyhow = "1.0.72"
+clap = { version = "4.3.19", features = ["derive"] }
+
+# Workspace
+db = { path = "../db" }
+args = { path = "../args" }
+api = { path = "../api" }

@@ -8,8 +8,8 @@ username = str(random.randint(1000, 9999))
 password = str(random.randint(1000, 9999))
 
 
-def test_registration():
-    address = api_url + "/register"
+def test_user_registration():
+    address = api_url + "/user/auth/register"
     disable_certificate_verification()
 
     body = {"username": username, "password": password}
@@ -21,8 +21,8 @@ def test_registration():
     assert response.status_code == 409
 
 
-def test_authorization():
-    address = api_url + "/login"
+def test_user_authorization():
+    address = api_url + "/user/auth/login"
     disable_certificate_verification()
 
     not_found_username = str(random.randint(1000, 9999))

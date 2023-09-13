@@ -3,6 +3,7 @@ use anyhow::Result;
 use super::Args;
 use clap::Parser;
 
+use api::network::routing;
 use axum_server::tls_rustls::RustlsConfig;
 
 async fn http_server() -> Result<()> {
@@ -10,7 +11,7 @@ async fn http_server() -> Result<()> {
     let socket_addr = format!("{}:{}", args.ip, args.http_port).parse()?;
 
     Ok(axum_server::bind(socket_addr)
-        .serve(super::network::http_app().await?.into_make_service())
+        .serve(routing::http_router().await?.into_make_service())
         .await?)
 }
 
@@ -23,7 +24,7 @@ async fn https_server() -> Result<()> {
     let socket_addr = format!("{}:{}", args.ip, args.https_port).parse()?;
 
     Ok(axum_server::bind_rustls(socket_addr, rustls_config)
-        .serve(super::network::https_app().await?.into_make_service())
+        .serve(routing::https_router().await?.into_make_service())
         .await?)
 }
 

@@ -3,25 +3,25 @@ use axum::{response::Response, Json};
 use hyper::StatusCode;
 use serde_json::{json, Map};
 
-use super::result::{AppError, PostJsonResult, PostResponseResult};
+use super::{AppError, PostJsonResponse, PostResponse};
 
-pub fn return_response_error(bad_code: StatusCode) -> PostResponseResult {
+pub fn send_response_error(bad_code: StatusCode) -> PostResponse {
     Ok(Response::builder().status(bad_code).body(String::new())?)
 }
 
-pub fn return_response_ok() -> PostResponseResult {
+pub fn send_response_ok() -> PostResponse {
     Ok(Response::new("OK".to_owned()))
 }
 
-pub fn return_json_error(bad_code: &str) -> PostJsonResult {
+pub fn send_json_response_error(bad_code: &str) -> PostJsonResponse {
     Ok(Json(serde_json::from_str(bad_code)?))
 }
 
 // Мейби сделать Option аргументы чтобы можно было возвращать просто { "message": "OK" }
-pub fn return_json_ok<T: std::fmt::Display>(
+pub fn send_json_response_ok<T: std::fmt::Display>(
     field: Vec<&str>,
     field_data: Vec<T>,
-) -> PostJsonResult {
+) -> PostJsonResponse {
     if field.len() != field_data.len() {
         return Err(AppError(anyhow!(
             "Number of fields and data must be the same"

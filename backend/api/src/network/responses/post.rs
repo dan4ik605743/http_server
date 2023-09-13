@@ -2,8 +2,10 @@ use axum::{response::Response, Json};
 use hyper::StatusCode;
 use serde_json::Value;
 
-pub type PostResponseResult = Result<Response<String>, AppError>;
-pub type PostJsonResult = Result<Json<Value>, AppError>;
+pub type PostResponse = Result<Response<String>, AppError>;
+pub type PostJsonResponse = Result<Json<Value>, AppError>;
+
+pub mod tools;
 
 // JsonErrorHandling
 #[non_exhaustive]

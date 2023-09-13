@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Выполняем тесты из get.py
-pytest ./server/assets/rest_api_tests/get.py
+pytest -o log_cli=true get.py
 
 # Проверяем статус выполнения pytest get.py
 if [ $? -ne 0 ]; then
@@ -10,7 +10,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Выполняем тесты из post.py
-pytest ./server/assets/rest_api_tests/post.py
+pytest -o log_cli=true post.py
 
 # Проверяем статус выполнения pytest post.py
 if [ $? -ne 0 ]; then
