@@ -1,7 +1,7 @@
 // JavaScript функции для кнопок
 function redirectToRegister() {
     // Перенаправление на страницу регистрации
-    window.location.href = "/register";
+    window.location.href = "user/auth/register";
 }
 
 function openAdminLogin() {
@@ -11,5 +11,5 @@ function openAdminLogin() {
 
 function openLogin() {
     // Перенаправление на страницу входа
-    window.location.href = "/login";
+    window.location.href = "user/auth/login";
 }

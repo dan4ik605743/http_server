@@ -5,20 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Страница входа</title>
-    <link rel="stylesheet" href="style/index.css">
+    <link rel="stylesheet" href="/user/auth/style/index.css">
 </head>
+<script src="index.js"></script>
 
 <body>
 
     <div class="login-card">
         <form class="login-form" id="login-form">
             <h2>Добро пожаловать!</h2>
-            <form action="/register"><button class="button" onclick="redirectToRegister()">Регистрация</button></form>
-            <form action="/login"><button class="button" onclick="openLogin()">Вход</button></form>
-            <form action="/admin"><button class="button" onclick="openAdminLogin()">Вход для администратора</button>
-            </form>
+            <br>
 
-            <script src="index.js"></script>
+
+        </form>
+        <form action="user/auth/register"><button class="button" onclick="redirectToRegister()">Регистрация</button>
+        </form>
+        <br>
+        <form action="user/auth/login"><button class="button" onclick="openLogin()">Вход</button></form>
+        <br>
+        <form action="user/auth/admin"><button class="button" onclick="openAdminLogin()">Вход для
+                администратора</button>
         </form>
 
 

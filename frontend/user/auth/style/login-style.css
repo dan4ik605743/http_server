@@ -67,7 +67,7 @@ body{
 }
 
 .login-form > input:hover{
-    border: 2px solid #10449A;
+    border: 2px solid #65109a;
 }
 
 .login-form > button{
@@ -119,5 +119,60 @@ body{
     }
 }
 
+.BackHome{
+  width: 100%;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
 
+.BackHome > input, .BackHome > button{
+  width: 100%;
+  height: 50px;
+}
 
+.BackHome > input {
+  border: 2px solid #ebebeb;
+  font-family: inherit;
+  font-size: 15px;
+  padding: 0 16px;
+  border-radius: 1.25rem;
+  transition: all 0.375s;
+}
+
+.BackHome > input:hover{
+  border: 2px solid #10449A;
+}
+
+.BackHome > button{
+  cursor: pointer;
+  width: 100%;
+  padding: 0 16px;
+  border-radius: 1.25rem;
+  background: #a818a1;
+  color: #f9f9f9;
+  border: 0;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 2px;
+  transition: all 0.375s;
+}
+
+.BackHome > button:hover{
+  background: #7818a8;
+}
+
+.BackHome > a{
+  color: #216ce7;
+  font-size: 0.9rem;
+  text-align: left;
+  text-decoration: none;
+  margin-bottom: 6px;
+  transition: all 0.375s;
+}
+
+.BackHome > a:hover{
+  color: #10449A;
+}

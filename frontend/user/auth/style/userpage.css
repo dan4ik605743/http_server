@@ -1,0 +1,20 @@
+*{
+    box-sizing: border-box;
+}
+
+html, body, .wrapper{
+    height: 100%;
+}
+
+body{
+    display: grid;
+    place-items: center;
+    margin: 0;
+    padding: 0 24px;
+    background-image: url("background.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: "Ubuntu";
+    color: #000;
+    animation: rotate 6s infinite alternate linear;
+}

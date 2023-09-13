@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <link rel="stylesheet" href="style/login-style.css" </head>
+    <link rel="stylesheet" href="/user/auth/style/login-style.css" </head>
 
 <body>
     <div class="login-card">
@@ -41,7 +41,7 @@
             };
 
             // Отправка данных на сервер с использованием Fetch API
-            fetch("/login", {
+            fetch("/user/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
