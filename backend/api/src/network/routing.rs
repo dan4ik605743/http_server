@@ -26,9 +26,14 @@ pub async fn https_router() -> Result<Router> {
 
     Ok(Router::new()
         // get
+        //
+        // users
+        .route("/user", get(users::user::get::user))
         .route("/user/auth/register", get(users::auth::get::register))
         .route("/user/auth/login", get(users::auth::get::login))
         // post
+        //
+        // users
         .route(
             "/user/auth/register",
             post({
