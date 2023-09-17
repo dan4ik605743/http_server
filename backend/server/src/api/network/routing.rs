@@ -41,6 +41,13 @@ pub async fn https_router() -> Result<Router> {
                 move |body| users::auth::post::register(body, conn)
             }),
         )
+        // .route(
+        //     "/test",
+        //     post({
+        //         let conn = conn.clone();
+        //         move |cookie| users::auth::post::test(cookie, conn)
+        //     }),
+        // )
         .route(
             "/user/auth/login",
             post({

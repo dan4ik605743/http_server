@@ -1,6 +1,8 @@
+use axum_extra::extract::CookieJar;
+
 use crate::api::users::prelude::*;
 
-pub async fn register(Json(data): Json<JsonUser>, conn: Pool) -> PostResponse {
+pub async fn register(Json(data): Json<JsonUser>, conn: Pool) -> PostResponse<ResponseValue> {
     let conn = &mut conn.get()?;
 
     if db::search_user(conn, &data.username).is_ok() {
@@ -8,7 +10,8 @@ pub async fn register(Json(data): Json<JsonUser>, conn: Pool) -> PostResponse {
             "A user with the same name: '{}' already exists",
             data.username,
         );
-        return tools::send_response_error(StatusCode::CONFLICT);
+        // return tools::send_response_error(StatusCode::CONFLICT);
+        return tools::send_err(StatusCode::CONFLICT);
     }
 
     let (password_hash, password_salt) =
@@ -21,23 +24,28 @@ pub async fn register(Json(data): Json<JsonUser>, conn: Pool) -> PostResponse {
         }
         Err(e) => {
             tracing::error!("{e}");
-            tools::send_response_error(StatusCode::INTERNAL_SERVER_ERROR)
+            tools::send_err(StatusCode::INTERNAL_SERVER_ERROR)
         }
     }
 }
 
-pub async fn login(Json(data): Json<JsonUser>, conn: Pool) -> PostJsonResponse {
+// pub async fn test(cookie: CookieJar, conn: Pool) -> PostCookieResponse {
+//     let conn = &mut conn.get()?;
+//     tools::send_cookie_response_err(StatusCode::INTERNAL_SERVER_ERROR)
+// }
+
+pub async fn login(Json(data): Json<JsonUser>, conn: Pool) -> PostResponse<JsonValue> {
     let conn = &mut conn.get()?;
 
     let password_salt = match db::get_salt(conn, &data.username) {
         Ok(val) => val,
         Err(e) if e.downcast_ref() == Some(&UserError::NotFoundUser) => {
             tracing::warn!("'{}': {e}", data.username);
-            return tools::send_json_response_error(JsonStatusCode::NOT_FOUND);
+            return tools::send_err(StatusCode::NOT_FOUND);
         }
         Err(e) => {
             tracing::warn!("'{}': {e}", data.username);
-            return tools::send_json_response_error(JsonStatusCode::INTERNAL_SERVER_ERROR);
+            return tools::send_err(StatusCode::INTERNAL_SERVER_ERROR);
         }
     };
 
@@ -47,7 +55,7 @@ pub async fn login(Json(data): Json<JsonUser>, conn: Pool) -> PostJsonResponse {
         Ok(_) => tools::send_json_response_ok(vec!["username"], vec![data.username]),
         Err(e) => {
             tracing::warn!("'{}': {e}", data.username);
-            tools::send_json_response_error(JsonStatusCode::UNAUTHORIZED)
+            tools::send_err(StatusCode::UNAUTHORIZED)
         }
     }
 }

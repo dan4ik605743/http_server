@@ -30,12 +30,15 @@ def test_user_authorization():
 
     body = {"username": username, "password": password}
     response = requests.post(address, json=body, verify=False)
-    assert response.json()["message"] == "OK"
+    assert response.status_code == 200
+    # assert response.json()["message"] == "OK"
 
     body = {"username": not_found_username, "password": password}
     response = requests.post(address, json=body, verify=False)
-    assert response.json()["error"] == "Not Found"
+    assert response.status_code == 404
+    # assert response.json()["error"] == "Not Found"
 
     body = {"username": username, "password": not_found_password}
     response = requests.post(address, json=body, verify=False)
-    assert response.json()["error"] == "Unauthorized"
+    assert response.status_code == 401
+    # assert response.json()["error"] == "Unauthorized"

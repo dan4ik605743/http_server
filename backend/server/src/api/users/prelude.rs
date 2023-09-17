@@ -14,5 +14,5 @@ pub use hyper::StatusCode;
 
 pub use crate::api::{
     crypto::passwords,
-    network::responses::post::{tools, JsonStatusCode, PostJsonResponse, PostResponse},
+    network::responses::post::{tools, AppError, JsonValue, PostResponse, ResponseValue},
 };

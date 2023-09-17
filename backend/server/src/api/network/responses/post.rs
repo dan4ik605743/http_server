@@ -1,33 +1,26 @@
 use axum::{response::Response, Json};
+use axum_extra::extract::CookieJar;
 use hyper::StatusCode;
 use serde_json::Value;
 
-pub type PostResponse = Result<Response<String>, AppError>;
-pub type PostJsonResponse = Result<Json<Value>, AppError>;
+pub type PostResponse<T> = Result<T, AppError>;
+pub type JsonValue = Json<Value>;
+pub type ResponseValue = Response<String>;
 
 pub mod tools;
 
-// JsonErrorHandling
-#[non_exhaustive]
-pub struct JsonStatusCode;
-
-impl JsonStatusCode {
-    pub const NOT_FOUND: &str = r#"{ "error": "Not Found" }"#;
-    pub const UNAUTHORIZED: &str = r#"{ "error": "Unauthorized" }"#;
-    pub const INTERNAL_SERVER_ERROR: &str = r#"{ "error": "Internal Server Error" }"#;
-}
-
 // AppErrorHandling
-pub struct AppError(pub anyhow::Error);
+pub struct AppError(pub (anyhow::Error, Option<StatusCode>));
 
 impl axum::response::IntoResponse for AppError {
     fn into_response(self) -> Response {
         (
             {
-                tracing::error!("{}", self.0);
-                StatusCode::INTERNAL_SERVER_ERROR
+                tracing::error!("{}", self.0 .0);
+                self.0 .1.unwrap_or(StatusCode::INTERNAL_SERVER_ERROR)
+                // StatusCode::INTERNAL_SERVER_ERROR
             },
-            format!("Something went wrong: {}", self.0),
+            format!("Something went wrong: {}", self.0 .0),
         )
             .into_response()
     }
@@ -38,6 +31,6 @@ where
     E: Into<anyhow::Error>,
 {
     fn from(err: E) -> Self {
-        Self(err.into())
+        Self((err.into(), Some(StatusCode::INTERNAL_SERVER_ERROR)))
     }
 }

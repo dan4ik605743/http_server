@@ -29,4 +29,4 @@ def test_user_authorization():
 #     cookies = session.cookies
 #     sys.stdout.write("Cookies received: {}\n".format(cookies))
 
-#     # print(session.cookies)
+#     print(session.cookies)

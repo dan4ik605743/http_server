@@ -1,30 +1,24 @@
 use anyhow::anyhow;
 use axum::{response::Response, Json};
+use axum_extra::extract::{cookie::Cookie, CookieJar};
 use hyper::StatusCode;
 use serde_json::{json, Map};
 
-use super::{AppError, PostJsonResponse, PostResponse};
+use super::{AppError, JsonValue, PostResponse, ResponseValue};
 
-pub fn send_response_error(bad_code: StatusCode) -> PostResponse {
-    Ok(Response::builder().status(bad_code).body(String::new())?)
-}
-
-pub fn send_response_ok() -> PostResponse {
+pub fn send_response_ok() -> PostResponse<ResponseValue> {
     Ok(Response::new("OK".to_owned()))
-}
-
-pub fn send_json_response_error(bad_code: &str) -> PostJsonResponse {
-    Ok(Json(serde_json::from_str(bad_code)?))
 }
 
 // Мейби сделать Option аргументы чтобы можно было возвращать просто { "message": "OK" }
 pub fn send_json_response_ok<T: std::fmt::Display>(
     field: Vec<&str>,
     field_data: Vec<T>,
-) -> PostJsonResponse {
+) -> PostResponse<JsonValue> {
     if field.len() != field_data.len() {
-        return Err(AppError(anyhow!(
-            "Number of fields and data must be the same"
+        return Err(AppError((
+            anyhow!("Number of fields and data must be the same"),
+            Some(StatusCode::INTERNAL_SERVER_ERROR),
         )));
     }
 
@@ -42,3 +36,15 @@ pub fn send_json_response_ok<T: std::fmt::Display>(
         &json_object,
     )?)?))
 }
+
+pub fn send_err<T>(bad_code: StatusCode) -> PostResponse<T> {
+    Err(AppError((anyhow!(bad_code), Some(bad_code))))
+}
+
+// pub fn send_cookie_response_ok(
+//     cookie: CookieJar,
+//     field: String,
+//     field_data: String,
+// ) -> PostCookieResponse {
+//     Ok(cookie.add(Cookie::new(field, field_data)))
+// }
