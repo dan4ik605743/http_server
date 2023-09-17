@@ -50,13 +50,13 @@
             })
                 .then(response => response.json()) // Преобразуем ответ в JSON
                 .then(responseData => {
-                    if (responseData.message === "OK") {
+                    if (responseData.message === 200) {
                         // Вход выполнен успешно, переадресация на /user с данными
                         window.location.href = `/user?username=${responseData.username}`;
-                    } else if (responseData.error === "Not Found") {
+                    } else if (responseData.error === 404) {
                         // Пользователь не найден
                         alert("Пользователь не найден.");
-                    } else if (responseData.error === "Unauthorized") {
+                    } else if (responseData.error === 401) {
                         // Неверный пароль пользователя
                         alert("Пароль пользователя неверен.");
                     } else {
