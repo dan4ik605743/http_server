@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use super::super::passwords::*;
+    use super::super::password::*;
 
     #[test]
     fn test() -> anyhow::Result<()> {

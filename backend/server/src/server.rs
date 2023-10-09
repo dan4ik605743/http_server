@@ -29,9 +29,8 @@ async fn https_server() -> Result<()> {
 }
 
 pub async fn start() -> Result<()> {
-    let http = tokio::spawn(http_server());
-    let https = tokio::spawn(https_server());
-
-    let _ = tokio::join!(http, https);
-    Ok(())
+    tokio::select! {
+         Err(e) = http_server() => Err(e),
+         Err(e) = https_server() => Err(e),
+    }
 }

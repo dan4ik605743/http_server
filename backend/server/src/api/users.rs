@@ -1,4 +1,3 @@
-pub mod auth;
-pub mod user;
+pub mod handlers;
 
-pub mod prelude;
+mod prelude;

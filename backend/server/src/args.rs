@@ -15,6 +15,10 @@ pub struct Args {
     #[arg(long, default_value_t = 3443)]
     pub https_port: u32,
 
+    /// HTTPS PORT
+    #[arg(long, default_value_t = 6379)]
+    pub redis_port: u32,
+
     /// DB
     #[arg(short, long)]
     pub db: String,

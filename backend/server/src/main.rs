@@ -4,7 +4,7 @@ use clap::Parser;
 mod api;
 mod args;
 mod logger;
-mod tools;
+mod server;
 
 use args::Args;
 
@@ -15,7 +15,7 @@ async fn main() -> Result<()> {
 
     tracing::info!("Server started");
 
-    let start = tools::start();
+    let start = server::start();
     let exit = tokio::signal::ctrl_c();
 
     tokio::select! {

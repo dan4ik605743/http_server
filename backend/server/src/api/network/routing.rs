@@ -1,4 +1,4 @@
-use anyhow::{Context, Result};
+use anyhow::Result;
 
 use clap::Parser;
 
@@ -17,10 +17,6 @@ use crate::args::Args;
 use static_source::StaticSource;
 
 pub async fn https_router() -> Result<Router> {
-    let conn = db::get_connection_pool(&Args::parse().db)?
-        .take()
-        .context("Failed get connection pool")?;
-
     let serve_dir = ServeDir::new(StaticSource::SOURCE_DIR)
         .not_found_service(ServeFile::new(StaticSource::ERROR_PAGE));
 
@@ -28,33 +24,14 @@ pub async fn https_router() -> Result<Router> {
         // get
         //
         // users
-        .route("/user", get(users::user::get::user))
-        .route("/user/auth/register", get(users::auth::get::register))
-        .route("/user/auth/login", get(users::auth::get::login))
+        .route("/user", get(static_source::user))
+        .route("/user/auth/register", get(static_source::register))
+        .route("/user/auth/login", get(static_source::login))
         // post
         //
         // users
-        .route(
-            "/user/auth/register",
-            post({
-                let conn = conn.clone();
-                move |body| users::auth::post::register(body, conn)
-            }),
-        )
-        // .route(
-        //     "/test",
-        //     post({
-        //         let conn = conn.clone();
-        //         move |cookie| users::auth::post::test(cookie, conn)
-        //     }),
-        // )
-        .route(
-            "/user/auth/login",
-            post({
-                let conn = conn.clone();
-                move |body| users::auth::post::login(body, conn)
-            }),
-        )
+        .route("/user/auth/register", post(users::handlers::register))
+        .route("/user/auth/login", post(users::handlers::login))
         // StaticResource and fallback other paths
         .nest_service("/", serve_dir.clone())
         .fallback_service(serve_dir.clone()))
