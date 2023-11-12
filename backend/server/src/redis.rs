@@ -1,7 +1,7 @@
 use once_cell::sync::OnceCell;
 use redis::Client;
 
-pub type RedisClient = redis::Client;
+type RedisClient = redis::Client;
 static REDIS_POOL: OnceCell<Client> = OnceCell::new();
 
 pub struct RedisConnection;
