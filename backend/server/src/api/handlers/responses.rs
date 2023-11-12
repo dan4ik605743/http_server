@@ -4,14 +4,14 @@ use axum::response::Response;
 use axum_extra::extract::CookieJar;
 use hyper::StatusCode;
 
-pub type PostResponse<T> = Result<T, AppError>;
+pub type HandlerResponse<T> = Result<T, ServerError>;
 pub type ResponseValue = Response<String>;
 pub type CookieValue = CookieJar;
 
-// AppErrorHandling
-pub struct AppError(pub (anyhow::Error, Option<StatusCode>));
+// ServerErrorHandling
+pub struct ServerError(pub (anyhow::Error, Option<StatusCode>));
 
-impl axum::response::IntoResponse for AppError {
+impl axum::response::IntoResponse for ServerError {
     fn into_response(self) -> Response {
         (
             {
@@ -24,7 +24,7 @@ impl axum::response::IntoResponse for AppError {
     }
 }
 
-impl<E> From<E> for AppError
+impl<E> From<E> for ServerError
 where
     E: Into<anyhow::Error>,
 {
@@ -33,11 +33,14 @@ where
     }
 }
 
-pub fn send_err<T>(bad_code: StatusCode) -> PostResponse<T> {
-    Err(AppError((anyhow!(bad_code), Some(bad_code))))
+pub fn send_err<T>(err_msg: String, bad_code: StatusCode) -> HandlerResponse<T> {
+    Err(ServerError((
+        anyhow!(format!("{err_msg} - {bad_code}")),
+        Some(bad_code),
+    )))
 }
 
-pub fn send_response_ok() -> PostResponse<ResponseValue> {
+pub fn send_ok() -> HandlerResponse<ResponseValue> {
     Ok(Response::new("OK".to_owned()))
 }
 
@@ -49,7 +52,7 @@ pub fn send_response_ok() -> PostResponse<ResponseValue> {
 //     field_data: Vec<T>,
 // ) -> PostResponse<JsonValue> {
 //     if field.len() != field_data.len() {
-//         return Err(AppError((
+//         return Err(ServerError((
 //             anyhow!("Number of fields and data must be the same"),
 //             Some(StatusCode::INTERNAL_SERVER_ERROR),
 //         )));

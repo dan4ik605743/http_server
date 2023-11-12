@@ -1,5 +1,4 @@
 use crate::api::crypto::secret_key;
-use crate::api::network;
 use crate::redis::RedisConnection;
 use rand::Rng;
 use redis::AsyncCommands;

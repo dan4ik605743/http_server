@@ -3,8 +3,11 @@ use anyhow::Result;
 use super::Args;
 use clap::Parser;
 
-use super::api::network::routing;
+use super::api::routing;
 use axum_server::tls_rustls::RustlsConfig;
+
+const CERT_PATH: &str = "./server/assets/self-signed-certs/cert.pem";
+const KEY_PATH: &str = "./server/assets/self-signed-certs/key.pem";
 
 async fn http_server() -> Result<()> {
     let args = Args::parse();
@@ -16,8 +19,6 @@ async fn http_server() -> Result<()> {
 }
 
 async fn https_server() -> Result<()> {
-    const CERT_PATH: &str = "./server/assets/self-signed-certs/cert.pem";
-    const KEY_PATH: &str = "./server/assets/self-signed-certs/key.pem";
     let rustls_config = RustlsConfig::from_pem_file(CERT_PATH, KEY_PATH).await?;
 
     let args = Args::parse();

@@ -4,10 +4,13 @@ use argon2::{
     Argon2,
 };
 
-type PasswordHashAndPasswordSalt = Result<(String, String)>;
 type PasswordHash = Result<String>;
+pub struct ArgonPassword {
+    pub password_hash: String,
+    pub password_salt: String,
+}
 
-pub fn create_password_hash_and_password_salt(password: &str) -> PasswordHashAndPasswordSalt {
+pub fn create_password_hash_and_password_salt(password: &str) -> Result<ArgonPassword> {
     let password_salt = SaltString::generate(&mut OsRng);
 
     let password_hash = Argon2::default()
@@ -15,7 +18,10 @@ pub fn create_password_hash_and_password_salt(password: &str) -> PasswordHashAnd
         .map_err(|e| anyhow!(e))?
         .to_string();
 
-    Ok((password_hash, password_salt.to_string()))
+    Ok(ArgonPassword {
+        password_hash,
+        password_salt: password_salt.to_string(),
+    })
 }
 
 pub fn get_password_hash(password: &str, password_salt: &str) -> PasswordHash {

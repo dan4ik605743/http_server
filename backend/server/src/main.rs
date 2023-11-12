@@ -1,4 +1,3 @@
-use anyhow::Result;
 use clap::Parser;
 
 mod api;
@@ -12,7 +11,7 @@ use db::SqliteConnection;
 use redis::RedisConnection;
 
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     logger::init_logger();
 

@@ -3,11 +3,11 @@ use anyhow::{bail, Result};
 use axum_extra::extract::cookie::Cookie;
 use redis::AsyncCommands;
 
-use super::handlers_utils::{CookieValue, PostResponse};
+use crate::api::handlers::responses::{CookieValue, HandlerResponse};
 
 // use time::Duration;
 
-pub async fn create_session(cookie: CookieValue, username: &str) -> PostResponse<CookieValue> {
+pub async fn create_session(cookie: CookieValue, username: &str) -> HandlerResponse<CookieValue> {
     let mut conn_redis = RedisConnection::get()
         .get_multiplexed_tokio_connection()
         .await?;
