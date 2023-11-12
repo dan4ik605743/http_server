@@ -1,5 +1,4 @@
-use crate::api::crypto::secret_key;
-use crate::api::network;
+use crate::{api::crypto::secret_key, redis::RedisConnection};
 use anyhow::{bail, Result};
 use axum_extra::extract::cookie::Cookie;
 use redis::AsyncCommands;
@@ -9,7 +8,9 @@ use super::handlers_utils::{CookieValue, PostResponse};
 // use time::Duration;
 
 pub async fn create_session(cookie: CookieValue, username: &str) -> PostResponse<CookieValue> {
-    let mut conn_redis = network::get_conn_redis().await?;
+    let mut conn_redis = RedisConnection::get()
+        .get_multiplexed_tokio_connection()
+        .await?;
     let secret_key = secret_key::generate_unique_secret_key(username).await?;
 
     conn_redis.rpush(username, &secret_key).await?;
@@ -30,7 +31,9 @@ pub async fn verification_session(cookie: CookieValue, username: &str) -> Result
         bail!("");
     }
 
-    let mut conn_redis = network::get_conn_redis().await?;
+    let mut conn_redis = RedisConnection::get()
+        .get_multiplexed_tokio_connection()
+        .await?;
     let secret_key: String = conn_redis.get(username).await?;
     if let Some(secret_key_cookie) = cookie.get(username) {
         if secret_key == secret_key_cookie.value() {

@@ -386,6 +386,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "diesel",
+ "once_cell",
  "serde",
  "thiserror",
 ]
@@ -1174,6 +1175,7 @@ dependencies = [
  "clap",
  "db",
  "hyper",
+ "once_cell",
  "rand",
  "rand_core",
  "redis",

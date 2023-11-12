@@ -1,10 +1,13 @@
 use crate::api::crypto::secret_key;
 use crate::api::network;
+use crate::redis::RedisConnection;
 use rand::Rng;
 use redis::AsyncCommands;
 
 pub async fn generate_unique_secret_key(username: &str) -> anyhow::Result<String> {
-    let mut conn_redis = network::get_conn_redis().await?;
+    let mut conn_redis = RedisConnection::get()
+        .get_multiplexed_tokio_connection()
+        .await?;
 
     let mut secret_key = generate_secret_key();
     let user_keys: Vec<String> = conn_redis.lrange(username, 0, -1).await?;
@@ -24,7 +27,9 @@ pub async fn generate_unique_secret_key(username: &str) -> anyhow::Result<String
 
 //TODO
 pub async fn verification_unique_secret_key(username: &str) -> anyhow::Result<()> {
-    let mut conn_redis = network::get_conn_redis().await?;
+    let mut conn_redis = RedisConnection::get()
+        .get_multiplexed_tokio_connection()
+        .await?;
     let user_keys: Vec<String> = conn_redis.lrange(username, 0, -1).await?;
 
     Ok(())

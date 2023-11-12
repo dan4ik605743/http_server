@@ -1,17 +1,10 @@
-use std::cell::OnceCell;
+use diesel::prelude::*;
 
-use anyhow::{anyhow, bail, Context, Result};
+use anyhow::{bail, Result};
 use thiserror::Error;
-
-use diesel::{
-    prelude::*,
-    r2d2::{self, ConnectionManager},
-};
 
 use super::models::{NewUser, User};
 use super::schema::users;
-
-pub type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
 #[derive(Debug, Error, PartialEq)]
 pub enum UserError {
@@ -19,15 +12,6 @@ pub enum UserError {
     WrongPassword,
     #[error("user not found")]
     NotFoundUser,
-}
-
-pub fn get_connection_pool(db_path: &str) -> Result<OnceCell<DbPool>> {
-    let pool = DbPool::builder().build(ConnectionManager::new(db_path))?;
-    let cell = OnceCell::<DbPool>::new();
-
-    cell.set(pool)
-        .map_err(|_| anyhow!("Failed to set connection db_pool"))?;
-    Ok(cell)
 }
 
 pub fn create_user(
@@ -61,9 +45,8 @@ pub fn verification_user(
     }
 }
 
-pub fn get_salt(conn: &mut SqliteConnection, username: &str) -> Result<String> {
-    let found_user = search_user(conn, username)?;
-    Ok(found_user.password_salt)
+pub fn get_password_salt_user(conn: &mut SqliteConnection, username: &str) -> Result<String> {
+    Ok(search_user(conn, username)?.password_salt)
 }
 
 pub fn search_user(conn: &mut SqliteConnection, username: &str) -> Result<User> {

@@ -2,7 +2,7 @@
 pub use axum::Json;
 pub use redis::AsyncCommands;
 
-pub use db::{DbPool, JsonUser, UserError};
+pub use db::{JsonUser, UserError};
 pub use hyper::StatusCode;
 
 pub use crate::api::{
