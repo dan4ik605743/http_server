@@ -1,40 +1,10 @@
-use crate::api::crypto::secret_key;
-use crate::redis::RedisConnection;
 use rand::Rng;
-use redis::AsyncCommands;
 
-pub async fn generate_unique_secret_key(username: &str) -> anyhow::Result<String> {
-    let mut conn_redis = RedisConnection::get()
-        .get_multiplexed_tokio_connection()
-        .await?;
-
-    let mut secret_key = generate_secret_key();
-    let user_keys: Vec<String> = conn_redis.lrange(username, 0, -1).await?;
-
-    if user_keys.is_empty() {
-        return Ok(secret_key);
-    }
-
-    loop {
-        if !user_keys.iter().any(|key| key == &secret_key) {
-            break Ok(secret_key);
-        } else {
-            secret_key = secret_key::generate_secret_key();
-        }
-    }
+pub fn verification_secret_keys(lhs: &str, rhs: &str) -> bool {
+    lhs == rhs
 }
 
-//TODO
-pub async fn verification_unique_secret_key(username: &str) -> anyhow::Result<()> {
-    let mut conn_redis = RedisConnection::get()
-        .get_multiplexed_tokio_connection()
-        .await?;
-    let user_keys: Vec<String> = conn_redis.lrange(username, 0, -1).await?;
-
-    Ok(())
-}
-
-fn generate_secret_key() -> String {
+pub fn generate_secret_key() -> String {
     const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     const KEY_LENGTH: usize = 32;
 

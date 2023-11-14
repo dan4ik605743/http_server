@@ -1,3 +1,5 @@
+use crate::api::crypto::secret_key;
+
 use super::prelude::*;
 
 pub async fn register(Json(data): Json<JsonUser>) -> HandlerResponse<ResponseValue> {
@@ -50,13 +52,14 @@ pub async fn login(
 
     let password_hash = password::get_password_hash(&data.password, &password_salt)?;
 
-    match db::tools::verification_user(conn_db, &data.username, &password_hash) {
-        // Ok(_) => post::tools::send_json_response_ok(vec!["username"], vec![data.username]),
-        // Ok(_) => post::tools::send_cookie_response_ok(cookie, "xxx", "field_data"),
-        Ok(_) => session::create_session(cookie, &data.username).await,
-        Err(e) => responses::send_err(
-            format!("'{}': {e}", data.username),
-            StatusCode::UNAUTHORIZED,
-        ),
-    }
+    responses::send_err(secret_key::generate_secret_key(), StatusCode::ACCEPTED)
+    // match db::tools::verification_user(conn_db, &data.username, &password_hash) {
+    //     // Ok(_) => post::tools::send_json_response_ok(vec!["username"], vec![data.username]),
+    //     // Ok(_) => post::tools::send_cookie_response_ok(cookie, "xxx", "field_data"),
+    //     Ok(_) => session::create_session(cookie, &data.username).await,
+    //     Err(e) => responses::send_err(
+    //         format!("'{}': {e}", data.username),
+    //         StatusCode::UNAUTHORIZED,
+    //     ),
+    // }
 }
