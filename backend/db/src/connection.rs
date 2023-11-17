@@ -7,14 +7,13 @@ static SQLITE_POOL: OnceCell<SqlitePool> = OnceCell::new();
 pub struct SqliteConnection;
 impl SqliteConnection {
     pub fn get() -> &'static SqlitePool {
-        SQLITE_POOL.get().expect("sqlite pool is not initialized")
+        SQLITE_POOL.get().expect("Sqlite pool is not initialized")
     }
 
     pub fn set(db_path: &str) -> anyhow::Result<()> {
         let pool = SqlitePool::builder().build(ConnectionManager::new(db_path))?;
-        SQLITE_POOL
-            .set(pool)
-            .expect("Failed to set connection sqlite pool");
+
+        SQLITE_POOL.set(pool).unwrap();
         Ok(())
     }
 }

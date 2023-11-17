@@ -1,7 +1,7 @@
 use super::prelude::*;
 
 pub async fn register(Json(data): Json<JsonUser>) -> HandlerResponse<ResponseValue> {
-    let conn_db = &mut SqliteConnection::get().get()?;
+    let conn_db = &mut SqliteConnection::get().clone().get()?;
 
     if db::tools::search_user(conn_db, &data.username).is_ok() {
         return responses::send_err(
@@ -30,7 +30,7 @@ pub async fn register(Json(data): Json<JsonUser>) -> HandlerResponse<ResponseVal
 }
 
 pub async fn login(auth_data: Auth<JsonUser>) -> HandlerResponse<CookieValue> {
-    let conn_db = &mut SqliteConnection::get().get()?;
+    let conn_db = &mut SqliteConnection::get().clone().get()?;
     let cookie = auth_data.extractors.cookie;
     let json = auth_data.extractors.json;
 

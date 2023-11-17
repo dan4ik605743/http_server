@@ -1,27 +1,27 @@
+use bb8_redis::{bb8::Pool, RedisConnectionManager};
 use once_cell::sync::OnceCell;
-use redis::Client;
 
-type RedisClient = redis::Client;
-static REDIS_CLIENT: OnceCell<Client> = OnceCell::new();
+type RedisPool = Pool<RedisConnectionManager>;
+static REDIS_POOL: OnceCell<RedisPool> = OnceCell::new();
 
 pub struct RedisConnection;
 impl RedisConnection {
-    pub fn get() -> &'static RedisClient {
-        REDIS_CLIENT.get().expect("Redis pool is not initialized")
+    pub fn get() -> &'static RedisPool {
+        REDIS_POOL.get().expect("Redis pool is not initialized")
     }
 
     pub async fn set(redis_port: u32) -> anyhow::Result<()> {
+        let manager = RedisConnectionManager::new(format!("redis://localhost:{}", redis_port))
+            .expect("URL basic checks redis failed");
+        let pool = Pool::builder().build(manager).await.unwrap();
+
         // Checks redis online
         redis::Client::open(format!("redis://localhost:{}", redis_port))
-            .expect("URL basic checks redis failed")
+            .unwrap()
             .get_connection()
             .expect("Failed connect to redis");
 
-        let redis_client =
-            redis::Client::open(format!("redis://localhost:{}", redis_port)).unwrap();
-        REDIS_CLIENT
-            .set(redis_client)
-            .expect("Failed to set connection redis pool");
+        REDIS_POOL.set(pool).unwrap();
         Ok(())
     }
 }

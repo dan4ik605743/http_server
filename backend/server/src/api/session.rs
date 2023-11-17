@@ -17,9 +17,8 @@ pub enum SessionError {
 }
 
 pub async fn create_session(cookie: CookieValue, username: &str) -> HandlerResponse<CookieValue> {
-    let mut conn_redis = RedisConnection::get()
-        .get_multiplexed_tokio_connection()
-        .await?;
+    let bindings = RedisConnection::get().clone();
+    let mut conn_redis = bindings.get().await?;
 
     let secret_key = secret_key::generate_secret_key();
 
@@ -39,9 +38,9 @@ pub async fn verification_session(cookie: CookieValue, username: &str) -> Result
     if cookie.get(username).is_none() {
         bail!(SessionError::NotFoundCookie);
     }
-    let mut conn_redis = RedisConnection::get()
-        .get_multiplexed_tokio_connection()
-        .await?;
+
+    let bindings = RedisConnection::get().clone();
+    let mut conn_redis = bindings.get().await?;
 
     let secret_key: String = conn_redis.get(username).await?;
 
