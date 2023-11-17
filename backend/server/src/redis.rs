@@ -2,12 +2,12 @@ use once_cell::sync::OnceCell;
 use redis::Client;
 
 type RedisClient = redis::Client;
-static REDIS_POOL: OnceCell<Client> = OnceCell::new();
+static REDIS_CLIENT: OnceCell<Client> = OnceCell::new();
 
 pub struct RedisConnection;
 impl RedisConnection {
     pub fn get() -> &'static RedisClient {
-        REDIS_POOL.get().expect("Redis pool is not initialized")
+        REDIS_CLIENT.get().expect("Redis pool is not initialized")
     }
 
     pub async fn set(redis_port: u32) -> anyhow::Result<()> {
@@ -17,9 +17,10 @@ impl RedisConnection {
             .get_connection()
             .expect("Failed connect to redis");
 
-        let pool = redis::Client::open(format!("redis://localhost:{}", redis_port)).unwrap();
-        REDIS_POOL
-            .set(pool)
+        let redis_client =
+            redis::Client::open(format!("redis://localhost:{}", redis_port)).unwrap();
+        REDIS_CLIENT
+            .set(redis_client)
             .expect("Failed to set connection redis pool");
         Ok(())
     }

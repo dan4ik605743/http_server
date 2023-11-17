@@ -3,7 +3,9 @@ use anyhow::anyhow;
 use axum::response::Response;
 use axum_extra::extract::CookieJar;
 use hyper::StatusCode;
+use tower_http::services::fs::ServeFileSystemResponseBody;
 
+pub type HtmlPageResponse = Response<ServeFileSystemResponseBody>;
 pub type HandlerResponse<T> = Result<T, ServerError>;
 pub type ResponseValue = Response<String>;
 pub type CookieValue = CookieJar;

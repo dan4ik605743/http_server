@@ -5,8 +5,11 @@ edition = "2021"
 
 [dependencies]
 
-# Network
+# Async
 tokio = { version = "1", features = ["full"] }
+async-trait = "0.1.74"
+
+# Network
 axum = "0.6.20"
 axum-server = { version = "0.5.1", features = ["tls-rustls"] }
 axum-extra = { version = "0.7.7", features = ["cookie"] }
@@ -34,11 +37,14 @@ argon2 = "0.5.2"
 rand_core = { version = "0.6.4", features = ["getrandom"] }
 rand = "0.8.5"
 
-# Other
+# Error handling
 anyhow = "1.0.72"
+thiserror = "1.0.48"
+
+# Other
 clap = { version = "4.3.19", features = ["derive"] }
 once_cell = "1.18.0"
-# axum-macros = "0.3.8"
+axum-macros = "0.3.8"
 
 # Workspace
 db = { path = "../db" }

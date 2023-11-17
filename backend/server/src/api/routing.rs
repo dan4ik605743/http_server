@@ -23,17 +23,14 @@ pub async fn https_router() -> Result<Router> {
         // get
         //
         // users
-        .route(
-            "/user",
-            get(|r| static_source::get_page(StaticSource::USER_PAGE, r)),
-        )
+        .route("/user", get(handlers::users::user))
         .route(
             "/user/auth/register",
-            get(|r| static_source::get_page(StaticSource::REGISTER_PAGE, r)),
+            get(|| static_source::get_page(StaticSource::REGISTER_PAGE)),
         )
         .route(
             "/user/auth/login",
-            get(|r| static_source::get_page(StaticSource::LOGIN_PAGE, r)),
+            get(|| static_source::get_page(StaticSource::LOGIN_PAGE)),
         )
         // post
         //

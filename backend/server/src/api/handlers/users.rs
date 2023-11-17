@@ -1,5 +1,3 @@
-use crate::api::crypto::secret_key;
-
 use super::prelude::*;
 
 pub async fn register(Json(data): Json<JsonUser>) -> HandlerResponse<ResponseValue> {
@@ -31,35 +29,50 @@ pub async fn register(Json(data): Json<JsonUser>) -> HandlerResponse<ResponseVal
     }
 }
 
-pub async fn login(
-    cookie: CookieValue,
-    Json(data): Json<JsonUser>,
-) -> HandlerResponse<CookieValue> {
+pub async fn login(auth_data: Auth<JsonUser>) -> HandlerResponse<CookieValue> {
     let conn_db = &mut SqliteConnection::get().get()?;
+    let cookie = auth_data.extractors.cookie;
+    let json = auth_data.extractors.json;
 
-    let password_salt = match db::tools::get_password_salt_user(conn_db, &data.username) {
+    let password_salt = match db::tools::get_password_salt_user(conn_db, &json.username) {
         Ok(val) => val,
         Err(e) if e.downcast_ref() == Some(&UserError::NotFoundUser) => {
-            return responses::send_err(format!("'{}': {e}", data.username), StatusCode::NOT_FOUND);
+            return responses::send_err(format!("'{}': {e}", json.username), StatusCode::NOT_FOUND)
         }
         Err(e) => {
             return responses::send_err(
-                format!("'{}': {e}", data.username),
+                format!("'{}': {e}", json.username),
                 StatusCode::INTERNAL_SERVER_ERROR,
-            );
+            )
         }
     };
 
-    let password_hash = password::get_password_hash(&data.password, &password_salt)?;
+    let password_hash = password::get_password_hash(&json.password, &password_salt)?;
+    match db::tools::verification_user(conn_db, &json.username, &password_hash) {
+        Ok(_) => {
+            tracing::info!("'{}': Login successfuly", json.username);
+            session::create_session(cookie, &json.username).await
+        }
+        Err(e) => responses::send_err(
+            format!("'{}': {e}", json.username),
+            StatusCode::UNAUTHORIZED,
+        ),
+    }
+}
 
-    responses::send_err(secret_key::generate_secret_key(), StatusCode::ACCEPTED)
-    // match db::tools::verification_user(conn_db, &data.username, &password_hash) {
-    //     // Ok(_) => post::tools::send_json_response_ok(vec!["username"], vec![data.username]),
-    //     // Ok(_) => post::tools::send_cookie_response_ok(cookie, "xxx", "field_data"),
-    //     Ok(_) => session::create_session(cookie, &data.username).await,
-    //     Err(e) => responses::send_err(
-    //         format!("'{}': {e}", data.username),
-    //         StatusCode::UNAUTHORIZED,
-    //     ),
-    // }
+pub async fn user(auth_data: Auth<JsonUser>) -> HandlerResponse<HtmlPageResponse> {
+    let cookie = auth_data.extractors.cookie;
+    let json = auth_data.extractors.json;
+
+    match session::verification_session(cookie, &json.username).await {
+        Ok(_) => static_source::get_page(StaticSource::USER_PAGE).await,
+        Err(e) if e.downcast_ref() == Some(&SessionError::NotFoundCookie) => {
+            responses::send_err(format!("'{}': {e}", json.username), StatusCode::FORBIDDEN)
+        }
+        Err(e) if e.downcast_ref() == Some(&SessionError::WrongSecretKey) => responses::send_err(
+            format!("'{}': {e}", json.username),
+            StatusCode::UNAUTHORIZED,
+        ),
+        Err(e) => responses::send_err(e.to_string(), StatusCode::INTERNAL_SERVER_ERROR),
+    }
 }

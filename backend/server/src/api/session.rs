@@ -1,11 +1,20 @@
-use crate::{api::crypto::secret_key, redis::RedisConnection};
-use anyhow::{bail, Result};
 use axum_extra::extract::cookie::Cookie;
+
+use anyhow::{bail, Result};
 use redis::AsyncCommands;
+use thiserror::Error;
+use time::Duration;
 
 use crate::api::handlers::responses::{CookieValue, HandlerResponse};
+use crate::{api::crypto::secret_key, redis::RedisConnection};
 
-use time::Duration;
+#[derive(Debug, Error, PartialEq)]
+pub enum SessionError {
+    #[error("cookie not found")]
+    NotFoundCookie,
+    #[error("wrong secret key in cookie")]
+    WrongSecretKey,
+}
 
 pub async fn create_session(cookie: CookieValue, username: &str) -> HandlerResponse<CookieValue> {
     let mut conn_redis = RedisConnection::get()
@@ -26,23 +35,18 @@ pub async fn create_session(cookie: CookieValue, username: &str) -> HandlerRespo
     ))
 }
 
-//TODO use Option<String>
 pub async fn verification_session(cookie: CookieValue, username: &str) -> Result<()> {
     if cookie.get(username).is_none() {
-        bail!("");
+        bail!(SessionError::NotFoundCookie);
     }
-
     let mut conn_redis = RedisConnection::get()
         .get_multiplexed_tokio_connection()
         .await?;
+
     let secret_key: String = conn_redis.get(username).await?;
-    if let Some(secret_key_cookie) = cookie.get(username) {
-        if secret_key == secret_key_cookie.value() {
-            Ok(())
-        } else {
-            bail!("");
-        }
-    } else {
-        bail!("");
+
+    match cookie.get(username).unwrap().value() {
+        secret_key_getted if secret_key == secret_key_getted => Ok(()),
+        _ => bail!(SessionError::WrongSecretKey),
     }
 }

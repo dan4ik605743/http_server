@@ -1,34 +1,25 @@
-use std::convert::Infallible;
-
-use hyper::{Body, Request, Response};
+use hyper::{Body, Request, StatusCode};
 use tower::ServiceExt;
-use tower_http::services::{fs::ServeFileSystemResponseBody, ServeFile};
+use tower_http::services::ServeFile;
 
-pub type GetPageResponse = Result<Response<ServeFileSystemResponseBody>, Infallible>;
+use crate::api::handlers::responses::{HandlerResponse, HtmlPageResponse, ServerError};
 
 #[non_exhaustive]
 pub struct StaticSource;
 
 impl StaticSource {
-    pub const SOURCE_DIR: &str = "../frontend";
-    pub const ERROR_PAGE: &str = "../frontend/error.html";
-    pub const LOGIN_PAGE: &str = "../frontend/login.html";
-    pub const REGISTER_PAGE: &str = "../frontend/register.html";
-    pub const USER_PAGE: &str = "../frontend/user.html";
+    pub const SOURCE_DIR: &'static str = "../frontend";
+    pub const ERROR_PAGE: &'static str = "../frontend/error.html";
+    pub const LOGIN_PAGE: &'static str = "../frontend/login.html";
+    pub const REGISTER_PAGE: &'static str = "../frontend/register.html";
+    pub const USER_PAGE: &'static str = "../frontend/user.html";
 }
 
-pub async fn get_page(path_page: &str, request: Request<Body>) -> GetPageResponse {
-    ServeFile::new(path_page).oneshot(request).await
+pub async fn get_page(path_page: &str) -> HandlerResponse<HtmlPageResponse> {
+    let empty_request = Request::builder().body(Body::empty()).unwrap();
+
+    ServeFile::new(path_page)
+        .oneshot(empty_request)
+        .await
+        .map_err(|e| ServerError((anyhow::anyhow!(e), Some(StatusCode::INTERNAL_SERVER_ERROR))))
 }
-
-// pub async fn login(request: Request<Body>) -> GetPageResponse {
-//     get_page(StaticSource::LOGIN_PAGE, request).await
-// }
-
-// pub async fn register(request: Request<Body>) -> GetPageResponse {
-//     get_page(StaticSource::REGISTER_PAGE, request).await
-// }
-
-// pub async fn user(request: Request<Body>) -> GetPageResponse {
-//     get_page(StaticSource::USER_PAGE, request).await
-// }
