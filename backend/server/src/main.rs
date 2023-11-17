@@ -15,8 +15,8 @@ async fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     logger::init_logger();
 
-    SqliteConnection::set(&args.db)?;
-    RedisConnection::set(args.redis_port).await?;
+    SqliteConnection::set(&args.db);
+    RedisConnection::set(args.redis_port).await;
 
     tracing::info!("Server started");
 
