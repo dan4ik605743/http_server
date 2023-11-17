@@ -10,10 +10,13 @@ impl RedisConnection {
         REDIS_POOL.get().expect("Redis pool is not initialized")
     }
 
-    pub async fn set(redis_port: u32) -> anyhow::Result<()> {
+    pub async fn set(redis_port: u32) {
         let manager = RedisConnectionManager::new(format!("redis://localhost:{}", redis_port))
             .expect("URL basic checks redis failed");
-        let pool = Pool::builder().build(manager).await.unwrap();
+        let pool = Pool::builder()
+            .build(manager)
+            .await
+            .expect("Could not build redis connection pool");
 
         // Checks redis online
         redis::Client::open(format!("redis://localhost:{}", redis_port))
@@ -22,6 +25,5 @@ impl RedisConnection {
             .expect("Failed connect to redis");
 
         REDIS_POOL.set(pool).unwrap();
-        Ok(())
     }
 }

@@ -10,10 +10,11 @@ impl SqliteConnection {
         SQLITE_POOL.get().expect("Sqlite pool is not initialized")
     }
 
-    pub fn set(db_path: &str) -> anyhow::Result<()> {
-        let pool = SqlitePool::builder().build(ConnectionManager::new(db_path))?;
+    pub fn set(db_path: &str) {
+        let pool = SqlitePool::builder()
+            .build(ConnectionManager::new(db_path))
+            .expect("Could not build sqlite connection pool");
 
         SQLITE_POOL.set(pool).unwrap();
-        Ok(())
     }
 }
